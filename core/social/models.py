@@ -21,6 +21,7 @@ class Profile(models.Model):
         return User.objects.filter(id__in=user_ids) 
 
 class Post(models.Model):
+    id = models.IntegerField(unique=True, null=False, blank=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
     timestamp = models.DateTimeField(default=timezone.now)
     content = models.TextField()
@@ -34,6 +35,13 @@ class Post(models.Model):
 class Relationship(models.Model):#Esta tabla guarda dos usuarios por row, el usuario A y el usuario B
     from_user = models.ForeignKey(User, related_name='relationship', on_delete=models.CASCADE)
     to_user = models.ForeignKey(User, related_name='related_to', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'De {self.from_user} Para {self.to_user}'
+
+class RelationshipLike(models.Model):#Esta tabla guarda dos usuarios por row, el usuario A y el usuario B
+    from_user = models.ForeignKey(User, related_name='relationship', on_delete=models.CASCADE)
+    to_post = models.ForeignKey(Post, related_name='related_to', on_delete=models.CASCADE)
 
     def __str__(self):
         return f'De {self.from_user} Para {self.to_user}'

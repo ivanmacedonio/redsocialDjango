@@ -76,5 +76,24 @@ def unfollow(request,username=None):
     messages.success(request, f'Ya no sigues a {username}')
     return redirect ('feed')
 
+def like(request,id):
+    current_user = request.user
+    to_post = Post.objects.get(id=id)
+    to_post_id = to_post
+    rel = RelationshipLike(from_user = current_user, to_post = to_post_id)
+    rel.save
+    messages.success(request, f'Te ha gustado la publicacion!')
+    return redirect('feed')
+
+def unlike(request,id):
+    current_user = request.user
+    to_post = Post.objects.get(id=id)
+    to_post_id = to_post
+    rel = RelationshipLike.objects.filter(from_user = current_user, to_post = to_post_id).get()
+    rel.delete()
+    messages.success(request, f'Ya no te gusta la publicacion!')
+    return redirect('feed')
+
+
 
 
